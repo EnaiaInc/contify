@@ -1,4 +1,6 @@
-# Contify client in Elixir
+# [Contify API](https://developer.contify.com/api-documentation#introduction) client in Elixir
+
+
 
 ## Updating generated code
 
