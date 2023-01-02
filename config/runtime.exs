@@ -10,3 +10,5 @@ import Config
 if base_url = System.get_env("CONTIFY_API_BASE_URI") do
   config :contify, base_url: base_url
 end
+
+config :tesla, ContifyAPI.Connection, headers: [{"Content-Type", "application/json"}]

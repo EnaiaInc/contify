@@ -11,14 +11,14 @@ defmodule ContifyAPI.Model.SearchCompanyGet200Response do
     :count,
     :next,
     :previous,
-    :result
+    :results
   ]
 
   @type t :: %__MODULE__{
           :count => integer() | nil,
           :next => String.t() | nil,
           :previous => String.t() | nil,
-          :result => [ContifyAPI.Model.Company.t()] | nil
+          :results => [ContifyAPI.Model.Company.t()] | nil
         }
 end
 
@@ -27,6 +27,6 @@ defimpl Poison.Decoder, for: ContifyAPI.Model.SearchCompanyGet200Response do
 
   def decode(value, options) do
     value
-    |> deserialize(:result, :list, ContifyAPI.Model.Company, options)
+    |> deserialize(:results, :list, ContifyAPI.Model.Company, options)
   end
 end

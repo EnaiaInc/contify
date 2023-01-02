@@ -10,6 +10,14 @@ defmodule ContifyAPI.Api.Company do
   import ContifyAPI.RequestBuilder
 
   @doc """
+  Wraps the request_company function.
+  """
+  def request_company(name, url, app_secret, app_id) do
+    connection = Connection.new(app_secret: app_secret, app_id: app_id)
+    request_company_get(connection, name, url)
+  end
+
+  @doc """
   Request for a company
   This endpoint lets you request for a company not found using search_company endpoint.
 
@@ -56,6 +64,12 @@ defmodule ContifyAPI.Api.Company do
       {500, %ContifyAPI.Model.Error{}},
       {503, false}
     ])
+  end
+
+  @doc "Wraps the search_company_get/2 function."
+  def search_company(query, app_secret, app_id) do
+    connection = Connection.new(app_secret: app_secret, app_id: app_id)
+    search_company_get(connection, query)
   end
 
   @doc """

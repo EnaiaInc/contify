@@ -99,6 +99,8 @@ defmodule ContifyAPI.Connection do
     [
       {Tesla.Middleware.BaseUrl, base_url},
       {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
+      {Tesla.Middleware.Headers, [{"APPSECRET", options[:app_secret]}]},
+      {Tesla.Middleware.Headers, [{"APPID", options[:app_id]}]},
       {Tesla.Middleware.EncodeJson, engine: json_engine}
       | middleware
     ]
