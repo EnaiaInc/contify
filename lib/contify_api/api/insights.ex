@@ -10,6 +10,14 @@ defmodule ContifyAPI.Api.Insights do
   import ContifyAPI.RequestBuilder
 
   @doc """
+  Wraps the insights_get function.
+  """
+  def insights(params) do
+    connection = Connection.new()
+    insights_get(connection, params)
+  end
+
+  @doc """
   Insights for given company
   Returns a list of insights. The insights can be filtered by company_id, industry_id, topic_id, custom_topic_id, location_id, content_type_id, channel_id, source_id, language_id, keyword, advanced_query . You can paginate through the list by using 'page'.
 
