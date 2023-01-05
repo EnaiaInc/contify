@@ -171,8 +171,8 @@ defmodule ContifyAPI.Api.Webhooks do
     ])
   end
 
-  def subscribe_to_webhook(webhook, app_secret, app_id) do
-    connection = Connection.new(app_secret: app_secret, app_id: app_id)
+  def subscribe_to_webhook(webhook) do
+    connection = Connection.new()
     webhook_post(connection, struct(ContifyAPI.Model.WebhookGetRequest, webhook))
   end
 

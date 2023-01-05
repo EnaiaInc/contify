@@ -12,8 +12,8 @@ defmodule ContifyAPI.Api.Company do
   @doc """
   Wraps the request_company function.
   """
-  def request_company(name, url, app_secret, app_id) do
-    connection = Connection.new(app_secret: app_secret, app_id: app_id)
+  def request_company(name, url) do
+    connection = Connection.new()
     request_company_get(connection, name, url)
   end
 
@@ -67,8 +67,8 @@ defmodule ContifyAPI.Api.Company do
   end
 
   @doc "Wraps the search_company_get/2 function."
-  def search_company(query, app_secret, app_id) do
-    connection = Connection.new(app_secret: app_secret, app_id: app_id)
+  def search_company(query) do
+    connection = Connection.new()
     search_company_get(connection, query)
   end
 

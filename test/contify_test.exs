@@ -30,7 +30,7 @@ defmodule ContifyTest do
         advancedQuery: ""
       }
 
-      assert Contify.subscribe_to_webhook(webhook, "secret", "key")
+      assert Contify.subscribe_to_webhook(webhook)
       {:ok, %ContifyAPI.Model.WebhookGetRequest{}}
     end
   end
@@ -66,7 +66,7 @@ defmodule ContifyTest do
     end
 
     test "search_company return results for searched company" do
-      assert Contify.search_company([name: "Patagonia"], "secret", "key")
+      assert Contify.search_company(name: "Patagonia")
       {:ok, %ContifyAPI.Model.SearchCompanyGet200Response{}}
     end
 
@@ -85,7 +85,7 @@ defmodule ContifyTest do
     end
 
     test "request a company" do
-      assert Contify.request_company("Patagonia", "patagonia.com", "secret", "key")
+      assert Contify.request_company("Patagonia", "patagonia.com")
       {:ok, %ContifyAPI.Model.SearchCompanyGet200Response{}}
     end
   end

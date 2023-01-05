@@ -6,8 +6,6 @@ defmodule Contify do
   alias ContifyAPI.Api.Company
   alias ContifyAPI.Api.Webhooks
 
-  @type app_id :: binary
-  @type app_secret :: binary
   @type query :: map
   @type name :: binary
   @type url :: binary
@@ -38,8 +36,8 @@ defmodule Contify do
 
   """
 
-  @spec subscribe_to_webhook(webhook, app_secret, app_id) :: webhook_response
-  defdelegate subscribe_to_webhook(webhook, app_secret, app_id), to: Webhooks
+  @spec subscribe_to_webhook(webhook) :: webhook_response
+  defdelegate subscribe_to_webhook(webhook), to: Webhooks
 
   @doc """
   Search for a Company.
@@ -52,8 +50,8 @@ defmodule Contify do
 
   """
 
-  @spec search_company(query, app_secret, app_id) :: search_company_response()
-  defdelegate search_company(query, app_secret, app_id), to: Company
+  @spec search_company(query) :: search_company_response()
+  defdelegate search_company(query), to: Company
 
   @doc """
   Request for a Company.
@@ -64,6 +62,6 @@ defmodule Contify do
       {:ok, %ContifyAPI.Model.RequestCompanyGet200Response{}
 
   """
-  @spec request_company(name, url, app_secret, app_id) :: request_company_response()
-  defdelegate request_company(name, url, app_secret, app_id), to: Company
+  @spec request_company(name, url) :: request_company_response()
+  defdelegate request_company(name, url), to: Company
 end
