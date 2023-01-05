@@ -36,6 +36,11 @@ Documentation can be generated with [ExDoc][] and published on [HexDocs][]. Once
 
 ## Configuration
 
+The API key can be added to the config as follows in the config.exs or runtime.exs:
+
+config :contify, app_secret: <YOUR_API_KEY>
+config :contify, app_id: <YOUR_APP_ID>
+
 You can override the URL of your server (e.g. if you have a separate development and production server in your
 configuration files).
 
@@ -54,3 +59,26 @@ client = ContifyAPI.Connection.new(base_url: "https://api.contify.com/v3")
 [hexdocs]: https://hexdocs.pm
 [available in hex]: https://hex.pm/docs/publish
 [docs]: https://hexdocs.pm/contify_api
+
+## Usage
+Contify.search_company(name: "some company")
+Contify.request_company(name: "some company", url: "some domain")
+Contify.subscribe_to_webhook(
+  %{
+        name: "some name",
+        url: "some endpoint",
+        headerName: "",
+        headerValue: "",
+        companyId: 678,
+        industryId: "",
+        contentTypeId: "",
+        locationId: "",
+        sourceId: "",
+        channelId: "",
+        topicId: "",
+        customTopicId: "",
+        languageId: "",
+        keyword: "",
+        advancedQuery: ""
+      }
+)

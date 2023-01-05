@@ -171,6 +171,11 @@ defmodule ContifyAPI.Api.Webhooks do
     ])
   end
 
+  def subscribe_to_webhook(webhook) do
+    connection = Connection.new()
+    webhook_post(connection, struct(ContifyAPI.Model.WebhookGetRequest, webhook))
+  end
+
   @doc """
   This endpoint lets you create a new webhook
 
