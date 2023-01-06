@@ -50,7 +50,6 @@ defmodule Contify do
 
   """
 
-  @spec search_company(query) :: search_company_response()
   defdelegate search_company(query), to: Company
 
   @doc """

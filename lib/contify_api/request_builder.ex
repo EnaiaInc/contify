@@ -184,5 +184,5 @@ defmodule ContifyAPI.RequestBuilder do
 
   defp decode(%Tesla.Env{} = env, false), do: {:ok, env}
 
-  defp decode(%Tesla.Env{body: body}, struct), do: Poison.decode(body, as: struct)
+  defp decode(%Tesla.Env{body: body}, struct), do: Poison.decode(body, %{as: struct})
 end

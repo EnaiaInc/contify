@@ -25,9 +25,8 @@ defmodule Contify.MixProject do
   defp deps do
     [
       {:tesla, "~> 1.4"},
-      {:poison, "~> 3.0"},
-      {:ex_doc, "~> 0.28", only: :dev, runtime: false},
-      {:ex_format, "~> 0.1.0"}
+      {:poison, "~> 5.0"},
+      {:ex_doc, "~> 0.28", only: :dev, runtime: false}
     ]
   end
 
