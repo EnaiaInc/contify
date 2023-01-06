@@ -4,11 +4,17 @@ defmodule Contify do
   """
 
   alias ContifyAPI.Api.Company
+  alias ContifyAPI.Api.Insights
   alias ContifyAPI.Api.Webhooks
 
   @type query :: map
   @type name :: binary
   @type url :: binary
+  @type insights_response ::
+          {:ok, ContifyAPI.Model.Error.t()}
+          | {:ok, ContifyAPI.Model.InsightsResponse.t()}
+          | {:ok, String.t()}
+          | {:error, Tesla.Env.t()}
   @type request_company_response ::
           {:ok, ContifyAPI.Model.Error.t()}
           | {:ok, ContifyAPI.Model.RequestCompanyGet200Response.t()}
@@ -27,11 +33,24 @@ defmodule Contify do
           | {:error, Tesla.Env.t()}
 
   @doc """
+  Get insights for a given company.
+
+  ## Examples
+
+      iex> Contify.insights()
+      {:ok, %ContifyAPI.Model.InsightsRequest{}}
+
+  """
+  @type params :: keyword
+  @spec insights(params) :: insights_response
+  defdelegate insights(params), to: Insights
+
+  @doc """
   Creates a webhook.
 
   ## Examples
 
-      iex> Contify.subscribe_to_webhook(%{name: "some name",url: "some endpoint",headerName: "",headerValue: "",companyId: 678,industryId: "",contentTypeId: "",locationId: "",sourceId: "",channelId: "",topicId: "",customTopicId: "",languageId: "",keyword: "",advancedQuery: ""},    "secret", "key")
+      iex> Contify.subscribe_to_webhook(%{name: "some name",url: "some endpoint",headerName: "",headerValue: "",companyId: 678,industryId: "",contentTypeId: "",locationId: "",sourceId: "",channelId: "",topicId: "",customTopicId: "",languageId: "",keyword: "",advancedQuery: ""})
       {:ok, %ContifyAPI.Model.WebhookGetRequest{}}
 
   """
@@ -44,7 +63,7 @@ defmodule Contify do
 
   ## Examples
 
-      iex> Contify.search_company([name: "some name", url: "some url", page: 1],"secret", "key")
+      iex> Contify.search_company([name: "some name", url: "some url", page: 1])
       {:ok, %ContifyAPI.Model.RequestCompanyGet200Response{count: 30,   next: "?page=2",previous: nil,results: [
         %ContifyAPI.Model.Company{}]}
 
@@ -57,7 +76,7 @@ defmodule Contify do
 
   ## Examples
 
-      iex> Contify.request_company("some name", "some url","secret", "key")
+      iex> Contify.request_company("some name", "some url")
       {:ok, %ContifyAPI.Model.RequestCompanyGet200Response{}
 
   """
