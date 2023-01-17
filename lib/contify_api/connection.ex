@@ -38,7 +38,11 @@ defmodule ContifyAPI.Connection do
 
   @doc "Forward requests to Tesla."
   @spec request(Tesla.Client.t(), [Tesla.option()]) :: Tesla.Env.result()
-  defdelegate request(client, options), to: Tesla
+  def request(client, options) do
+    timeout = Application.get_env(:contify, :timeout, @default_timeout)
+    options = options |> Keyword.merge(opts: [adapter: [timeout: timeout]])
+    Tesla.request(client, options)
+  end
 
   @doc """
   Configure a client with no authentication.
