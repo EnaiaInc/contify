@@ -57,6 +57,10 @@ defmodule Contify do
 
   @spec subscribe_to_webhook(webhook) :: webhook_response
   defdelegate subscribe_to_webhook(webhook), to: Webhooks
+  defdelegate list_webhooks(), to: Webhooks
+  defdelegate get_webhook(id), to: Webhooks
+  defdelegate update_webhook(id, webhook), to: Webhooks
+  defdelegate delete_webhook(webhook), to: Webhooks
 
   @doc """
   Search for a Company.
