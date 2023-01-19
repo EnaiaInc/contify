@@ -171,11 +171,6 @@ defmodule ContifyAPI.Api.Webhooks do
     ])
   end
 
-  def subscribe_to_webhook(webhook) do
-    connection = Connection.new()
-    webhook_post(connection, struct(ContifyAPI.Model.WebhookGetRequest, webhook))
-  end
-
   @doc """
   This endpoint lets you create a new webhook
 
@@ -214,5 +209,30 @@ defmodule ContifyAPI.Api.Webhooks do
       {500, %ContifyAPI.Model.Error{}},
       {503, false}
     ])
+  end
+
+  def subscribe_to_webhook(webhook) do
+    connection = Connection.new()
+    webhook_post(connection, struct(ContifyAPI.Model.WebhookGetRequest, webhook))
+  end
+
+  def list_webhooks() do
+    Connection.new()
+    |> webhook_get()
+  end
+
+  def get_webhook(id) do
+    Connection.new()
+    |> webhook_id_get(id)
+  end
+
+  def update_webhook(id, webhook) do
+    Connection.new()
+    |> webhook_id_put(id, struct(ContifyAPI.Model.WebhookGetRequest, webhook))
+  end
+
+  def delete_webhook(id) do
+    Connection.new()
+    |> webhook_id_delete(id)
   end
 end
