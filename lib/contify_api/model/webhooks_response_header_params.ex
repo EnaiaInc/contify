@@ -8,13 +8,13 @@ defmodule ContifyAPI.Model.WebhooksResponseHeaderParams do
 
   @derive [Poison.Encoder]
   defstruct [
-    :header_name,
-    :header_value
+    :name,
+    :secret
   ]
 
   @type t :: %__MODULE__{
-          :header_name => String.t() | nil,
-          :header_value => String.t() | nil
+          :name => String.t() | nil,
+          :secret => String.t() | nil
         }
 end
 
