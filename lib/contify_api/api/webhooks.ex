@@ -151,6 +151,12 @@ defmodule ContifyAPI.Api.Webhooks do
           | {:ok, String.t()}
           | {:error, Tesla.Env.t()}
   def webhook_id_put(connection, id, webhook, _opts \\ []) do
+    webhook =
+      webhook
+      |> Map.from_struct()
+      |> Enum.reject(fn {_key, value} -> value == nil end)
+      |> Enum.into(%{})
+
     request =
       %{}
       |> method(:put)
@@ -191,6 +197,12 @@ defmodule ContifyAPI.Api.Webhooks do
           | {:ok, String.t()}
           | {:error, Tesla.Env.t()}
   def webhook_post(connection, webhook, _opts \\ []) do
+    webhook =
+      webhook
+      |> Map.from_struct()
+      |> Enum.reject(fn {_key, value} -> value == nil end)
+      |> Enum.into(%{})
+
     request =
       %{}
       |> method(:post)
@@ -200,6 +212,7 @@ defmodule ContifyAPI.Api.Webhooks do
 
     connection
     |> Connection.request(request)
+    |> IO.inspect()
     |> evaluate_response([
       {200, %ContifyAPI.Model.WebhooksResponse{}},
       {400, %ContifyAPI.Model.Error{}},
