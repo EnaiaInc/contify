@@ -212,7 +212,6 @@ defmodule ContifyAPI.Api.Webhooks do
 
     connection
     |> Connection.request(request)
-    |> IO.inspect()
     |> evaluate_response([
       {200, %ContifyAPI.Model.WebhooksResponse{}},
       {400, %ContifyAPI.Model.Error{}},
