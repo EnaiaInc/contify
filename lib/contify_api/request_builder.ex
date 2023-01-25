@@ -184,5 +184,19 @@ defmodule ContifyAPI.RequestBuilder do
 
   defp decode(%Tesla.Env{} = env, false), do: {:ok, env}
 
+  defp decode(%Tesla.Env{body: body}, %ContifyAPI.Model.Error{} = struct) do
+    case Poison.decode(body) do
+      {:ok, map} ->
+        map
+        |> Map.put("message", map["message"] || map["messages"])
+        |> Map.delete("messages")
+        |> Poison.encode!()
+        |> Poison.decode(%{as: struct})
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   defp decode(%Tesla.Env{body: body}, struct), do: Poison.decode(body, %{as: struct})
 end
