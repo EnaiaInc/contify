@@ -105,7 +105,9 @@ defmodule ContifyAPI.Connection do
     app_secret = app_secret()
     app_id = app_id()
 
-    if Mix.env() == :test do
+    timeout = Application.get_env(:contify, :timeout, @default_timeout)
+
+    if timeout == 0 do
       [
         {Tesla.Middleware.BaseUrl, base_url},
         {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
@@ -115,8 +117,6 @@ defmodule ContifyAPI.Connection do
         | middleware
       ]
     else
-      timeout = Application.get_env(:contify, :timeout, @default_timeout)
-
       [
         {Tesla.Middleware.BaseUrl, base_url},
         {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
