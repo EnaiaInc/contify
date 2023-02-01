@@ -27,9 +27,9 @@ defmodule Contify do
           | {:error, Tesla.Env.t()}
   @type webhook :: map
   @type webhook_response ::
-          {:ok, ContifyAPI.Model.Error.t()}
-          | {:ok, ContifyAPI.Model.WebhooksResponse.t()}
+          {:ok, ContifyAPI.Model.WebhooksResponse.t()}
           | {:ok, String.t()}
+          | {:error, ContifyAPI.Model.Error.t()}
           | {:error, Tesla.Env.t()}
 
   @doc """

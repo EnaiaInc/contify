@@ -192,9 +192,9 @@ defmodule ContifyAPI.Api.Webhooks do
   - `{:error, Tesla.Env.t}` on failure
   """
   @spec webhook_post(Tesla.Env.client(), ContifyAPI.Model.WebhookGetRequest.t(), keyword()) ::
-          {:ok, ContifyAPI.Model.Error.t()}
-          | {:ok, ContifyAPI.Model.WebhooksResponse.t()}
+          {:ok, ContifyAPI.Model.WebhooksResponse.t()}
           | {:ok, String.t()}
+          | {:error, ContifyAPI.Model.Error.t()}
           | {:error, Tesla.Env.t()}
   def webhook_post(connection, webhook, _opts \\ []) do
     webhook =
