@@ -58,11 +58,55 @@ defmodule ContifyTest do
     end
   end
 
+  describe "existing webhooks" do
+    setup do
+      Tesla.Mock.mock(fn
+        %{method: :post} ->
+          %Tesla.Env{
+            status: 500,
+            body:
+              ~s({"code":100, "message": "Internal Error. Please check if you are providing all necessary details.", "fields": ""}
+            )
+          }
+      end)
+
+      :ok
+    end
+
+    test "subscribe to webhook" do
+      params = %{
+        name: "some name",
+        url: "some endpoint",
+        headerName: "",
+        headerValue: "",
+        companyId: 678,
+        industryId: "",
+        contentTypeId: "",
+        locationId: "",
+        sourceId: "",
+        channelId: "",
+        topicId: "",
+        customTopicId: "",
+        languageId: "",
+        keyword: "",
+        advancedQuery: ""
+      }
+
+      assert {:error,
+              %ContifyAPI.Model.Error{
+                code: 100,
+                fields: "",
+                message:
+                  "Internal Error. Please check if you are providing all necessary details."
+              }} = Contify.subscribe_to_webhook(params)
+    end
+  end
+
   describe "search_company" do
     setup do
       Tesla.Mock.mock(fn
         %{method: :get} ->
-          %Tesla.Env{status: 200, body: ~s({ 
+          %Tesla.Env{status: 200, body: ~s({
              "count": 30,
              "next": "?page=2",
              "previous": null,

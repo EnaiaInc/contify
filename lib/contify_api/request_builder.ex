@@ -161,7 +161,7 @@ defmodule ContifyAPI.RequestBuilder do
   - `{:error, term}` on failure
   """
   @spec evaluate_response(Tesla.Env.result(), response_mapping) ::
-          {:ok, struct()} | Tesla.Env.result()
+          {:ok, struct()} | {:error, struct} | Tesla.Env.result()
   def evaluate_response({:ok, %Tesla.Env{} = env}, mapping) do
     resolve_mapping(env, mapping, nil)
   end
@@ -186,6 +186,14 @@ defmodule ContifyAPI.RequestBuilder do
 
   defp decode(%Tesla.Env{body: body}, %ContifyAPI.Model.Error{} = struct) do
     case Poison.decode(body) do
+      {:ok, %{"code" => 100} = map} ->
+        map =
+          map
+          |> Poison.encode!()
+          |> Poison.decode!(%{as: struct})
+
+        {:error, map}
+
       {:ok, map} ->
         map
         |> Map.put("message", map["message"] || map["messages"])
