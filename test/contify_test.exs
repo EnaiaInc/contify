@@ -63,7 +63,7 @@ defmodule ContifyTest do
       Tesla.Mock.mock(fn
         %{method: :post} ->
           %Tesla.Env{
-            status: 100,
+            status: 500,
             body:
               ~s({"code":100, "message": "Internal Error. Please check if you are providing all necessary details.", "fields": ""}
             )

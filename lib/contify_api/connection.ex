@@ -105,17 +105,28 @@ defmodule ContifyAPI.Connection do
     app_secret = app_secret()
     app_id = app_id()
 
-    timeout = Application.get_env(:contify, :timeout, @default_timeout)
+    if Mix.env() == :test do
+      [
+        {Tesla.Middleware.BaseUrl, base_url},
+        {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
+        {Tesla.Middleware.Headers, [{"APPSECRET", app_secret}]},
+        {Tesla.Middleware.Headers, [{"APPID", app_id}]},
+        {Tesla.Middleware.EncodeJson, engine: json_engine}
+        | middleware
+      ]
+    else
+      timeout = Application.get_env(:contify, :timeout, @default_timeout)
 
-    [
-      {Tesla.Middleware.BaseUrl, base_url},
-      {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
-      {Tesla.Middleware.Headers, [{"APPSECRET", app_secret}]},
-      {Tesla.Middleware.Headers, [{"APPID", app_id}]},
-      {Tesla.Middleware.Timeout, timeout: timeout},
-      {Tesla.Middleware.EncodeJson, engine: json_engine}
-      | middleware
-    ]
+      [
+        {Tesla.Middleware.BaseUrl, base_url},
+        {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
+        {Tesla.Middleware.Headers, [{"APPSECRET", app_secret}]},
+        {Tesla.Middleware.Headers, [{"APPID", app_id}]},
+        {Tesla.Middleware.Timeout, timeout: timeout},
+        {Tesla.Middleware.EncodeJson, engine: json_engine}
+        | middleware
+      ]
+    end
   end
 
   @doc """
