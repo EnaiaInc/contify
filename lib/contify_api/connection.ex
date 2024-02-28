@@ -40,7 +40,7 @@ defmodule ContifyAPI.Connection do
   @spec request(Tesla.Client.t(), [Tesla.option()]) :: Tesla.Env.result()
   def request(client, options) do
     timeout = Application.get_env(:contify, :timeout, @default_timeout)
-    options = options |> Keyword.merge(opts: [adapter: [timeout: timeout]])
+    options = options |> Keyword.merge(opts: [adapter: [timeout: timeout, ssl_options: [verify: :verify_none]]])
     Tesla.request(client, options)
   end
 
@@ -113,8 +113,7 @@ defmodule ContifyAPI.Connection do
         {Tesla.Middleware.Headers, [{"user-agent", user_agent}]},
         {Tesla.Middleware.Headers, [{"APPSECRET", app_secret}]},
         {Tesla.Middleware.Headers, [{"APPID", app_id}]},
-        {Tesla.Middleware.EncodeJson, engine: json_engine},
-        {Tesla.Middleware.SSL, verify: :verify_none}
+        {Tesla.Middleware.EncodeJson, engine: json_engine}
         | middleware
       ]
     else
@@ -124,8 +123,7 @@ defmodule ContifyAPI.Connection do
         {Tesla.Middleware.Headers, [{"APPSECRET", app_secret}]},
         {Tesla.Middleware.Headers, [{"APPID", app_id}]},
         {Tesla.Middleware.Timeout, timeout: timeout},
-        {Tesla.Middleware.EncodeJson, engine: json_engine},
-        {Tesla.Middleware.SSL, verify: :verify_none}
+        {Tesla.Middleware.EncodeJson, engine: json_engine}
         | middleware
       ]
     end
