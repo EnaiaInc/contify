@@ -114,6 +114,7 @@ defmodule ContifyAPI.Connection do
         {Tesla.Middleware.Headers, [{"APPSECRET", app_secret}]},
         {Tesla.Middleware.Headers, [{"APPID", app_id}]},
         {Tesla.Middleware.EncodeJson, engine: json_engine}
+        {Tesla.Middleware.SSL, verify: :verify_none}
         | middleware
       ]
     else
@@ -124,6 +125,7 @@ defmodule ContifyAPI.Connection do
         {Tesla.Middleware.Headers, [{"APPID", app_id}]},
         {Tesla.Middleware.Timeout, timeout: timeout},
         {Tesla.Middleware.EncodeJson, engine: json_engine}
+        {Tesla.Middleware.SSL, verify: :verify_none}
         | middleware
       ]
     end
