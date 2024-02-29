@@ -40,7 +40,7 @@ defmodule ContifyAPI.Connection do
   @spec request(Tesla.Client.t(), [Tesla.option()]) :: Tesla.Env.result()
   def request(client, options) do
     timeout = Application.get_env(:contify, :timeout, @default_timeout)
-    options = options |> Keyword.merge(opts: [adapter: [timeout: timeout, ssl_options: [verify: :verify_none]]])
+    options = options |> Keyword.merge(opts: [adapter: [timeout: timeout, transport_opts: [verify: :verify_none]]])
     Tesla.request(client, options)
   end
 
