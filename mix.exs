@@ -5,7 +5,7 @@ defmodule Contify.MixProject do
     [
       app: :contify,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.18",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       package: package(),
@@ -25,7 +25,7 @@ defmodule Contify.MixProject do
   defp deps do
     [
       {:tesla, "~> 1.4"},
-      {:poison, "~> 5.0"},
+      {:poison, "~> 6.0"},
       {:ex_doc, "~> 0.28", only: :dev, runtime: false}
     ]
   end
