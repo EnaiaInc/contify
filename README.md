@@ -1,60 +1,96 @@
-# [Contify API](https://developer.contify.com/api-documentation#introduction) client in Elixir
+# Contify
+
+[![Hex.pm](https://img.shields.io/hexpm/v/contify.svg)](https://hex.pm/packages/contify)
+[![Documentation](https://img.shields.io/badge/hex-docs-blue.svg)](https://hexdocs.pm/contify)
+
+An Elixir client for the [Contify API](https://developer.contify.com/api-documentation),
+built on [`Req`](https://hex.pm/packages/req).
+
+## Installation
+
+Add `contify` to your dependencies in `mix.exs`:
+
+```elixir
+def deps do
+  [
+    {:contify, github: "EnaiaInc/contify"}
+  ]
+end
+```
 
 ## Configuration
 
-The API key can be added to the config as follows in the config.exs or runtime.exs:
+Provide the application credentials via the application environment:
 
 ```elixir
-config :contify, app_secret: <YOUR_API_KEY>
-config :contify, app_id: <YOUR_APP_ID>
+# config/runtime.exs
+config :contify,
+  app_id: System.fetch_env!("CONTIFY_APP_ID"),
+  app_secret: System.fetch_env!("CONTIFY_APP_SECRET")
 ```
 
-Optionally, the timeout can be overriden:
+Optional settings (with defaults shown):
 
 ```elixir
-config :contify, timeout: 60_000
+config :contify,
+  base_url: "https://api.contify.com/v3",
+  timeout: 30_000
 ```
+
+`CONTIFY_API_BASE_URI` overrides the base URL at runtime.
 
 ## Usage
 
 ```elixir
-Contify.search_company(name: "some company")
-Contify.request_company(name: "some company", url: "some domain")
-Contify.subscribe_to_webhook(
-  %{
-        name: "some name",
-        url: "some endpoint",
-        headerName: "",
-        headerValue: "",
-        companyId: 678,
-        industryId: "",
-        contentTypeId: "",
-        locationId: "",
-        sourceId: "",
-        channelId: "",
-        topicId: "",
-        customTopicId: "",
-        languageId: "",
-        keyword: "",
-        advancedQuery: ""
-      }
-)
+{:ok, %ContifyAPI.Model.SearchCompanyGet200Response{results: [%ContifyAPI.Model.Company{} | _]}} =
+  Contify.search_company(name: "Microsoft")
+
+{:ok, %ContifyAPI.Model.RequestCompanyGet200Response{}} =
+  Contify.request_company("Patagonia", "patagonia.com")
+
+{:ok, %ContifyAPI.Model.InsightsResponse{results: [%ContifyAPI.Model.Insight{} | _]}} =
+  Contify.insights(company_id: 1)
+
+{:ok, %ContifyAPI.Model.WebhooksResponse{id: id}} =
+  Contify.subscribe_to_webhook(%{
+    name: "my-webhook",
+    url: "https://example.com/contify",
+    sourceId: "56"
+  })
+
+{:ok, _} = Contify.get_webhook(id)
+{:ok, _} = Contify.update_webhook(id, %{name: "renamed"})
+{:ok, _} = Contify.delete_webhook(id)
 ```
 
-## Building
+### Result tuple shapes
 
-To install the required dependencies and to build the elixir project, run:
+- `{:ok, %ContifyAPI.Model.* {} | %ContifyAPI.Model.Error{}}` — 2xx success
+  or a structured API error returned in the response body.
+- `{:error, %Req.TransportError{} | %Req.HTTPError{} | %Req.Response{}}` — transport
+  failures or non-success responses without a recognizable error body.
 
-```console
-mix local.hex --force
-mix do deps.get, compile
+## Testing
+
+`Req.Test` is the supported way to intercept requests in tests:
+
+```elixir
+# config/test.exs
+config :contify, req_options: [plug: {Req.Test, ContifyAPI.Client}]
 ```
 
-## Updating generated code
+```elixir
+test "search returns a company" do
+  Req.Test.expect(ContifyAPI.Client, fn conn ->
+    Req.Test.json(conn, %{count: 1, results: [%{id: 697, name: "Microsoft"}]})
+  end)
 
-```sh
-  java -jar bin/openapi-generator-cli-6.2.0.jar generate -i https://developer.contify.com/swagger/spec/Contify.json -g elixir -o /tmp/elixir_api_client
-  cp -r /tmp/elixir_api_client/lib/contify_api/* lib/contify/
+  assert {:ok, %ContifyAPI.Model.SearchCompanyGet200Response{
+            results: [%ContifyAPI.Model.Company{id: 697}]
+          }} = Contify.search_company(name: "Microsoft")
+end
 ```
 
-You may also update the files under `config`, etc.
+## License
+
+MIT. See [LICENSE](./LICENSE).

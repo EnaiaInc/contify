@@ -1,7 +1,5 @@
-defmodule ContifyAPI.Model.InsightsResponse do
-  @moduledoc """
-  A page of insights against the applied filters.
-  """
+defmodule ContifyAPI.Model.SearchCompanyGet200Response do
+  @moduledoc false
 
   defstruct [:count, :next, :previous, :results]
 
@@ -9,6 +7,6 @@ defmodule ContifyAPI.Model.InsightsResponse do
           count: integer() | nil,
           next: String.t() | nil,
           previous: String.t() | nil,
-          results: [ContifyAPI.Model.Insight.t()] | nil
+          results: [ContifyAPI.Model.Company.t()] | nil
         }
 end

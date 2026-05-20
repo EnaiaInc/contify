@@ -1,15 +1,10 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Config module.
-#
-# This configuration file is loaded before any dependency and
-# is restricted to this project.
-
-# General application configuration
 import Config
 
-config :contify, base_url: "https://api.contify.com/v3"
+# The HTTP client reads `base_url`, `timeout`, `app_id`, `app_secret`, and
+# `req_options` from `Application.get_env(:contify, ...)`. Defaults live in
+# `ContifyAPI.Client`. The application using this library is responsible for
+# providing `:app_id` and `:app_secret`.
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-#
-import_config "#{config_env()}.exs"
+if File.exists?(Path.join(__DIR__, "#{config_env()}.exs")) do
+  import_config "#{config_env()}.exs"
+end

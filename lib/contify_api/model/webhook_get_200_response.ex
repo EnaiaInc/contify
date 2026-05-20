@@ -1,6 +1,6 @@
-defmodule ContifyAPI.Model.InsightsResponse do
+defmodule ContifyAPI.Model.WebhookGet200Response do
   @moduledoc """
-  A page of insights against the applied filters.
+  Envelope returned by `GET /webhook/`.
   """
 
   defstruct [:count, :next, :previous, :results]
@@ -9,6 +9,6 @@ defmodule ContifyAPI.Model.InsightsResponse do
           count: integer() | nil,
           next: String.t() | nil,
           previous: String.t() | nil,
-          results: [ContifyAPI.Model.Insight.t()] | nil
+          results: [ContifyAPI.Model.WebhooksResponse.t()] | nil
         }
 end

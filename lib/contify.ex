@@ -1,89 +1,75 @@
 defmodule Contify do
   @moduledoc """
-  Documentation for `Contify`.
+  Contify API client for Elixir.
+
+  See the [Contify API documentation](https://developer.contify.com/api-documentation)
+  for details on the underlying endpoints.
+
+  ## Configuration
+
+  Set the API credentials in your application config:
+
+      config :contify,
+        app_id: "your-app-id",
+        app_secret: "your-app-secret"
+
+  Optional config:
+
+      config :contify,
+        base_url: "https://api.contify.com/v3",
+        timeout: 30_000
+
+  For tests, pass a Req.Test plug to intercept HTTP calls without touching the network:
+
+      # config/test.exs
+      config :contify, req_options: [plug: {Req.Test, ContifyAPI.Client}]
   """
 
   alias ContifyAPI.Api.Company
   alias ContifyAPI.Api.Insights
   alias ContifyAPI.Api.Webhooks
+  alias ContifyAPI.Model
 
-  @type query :: map
-  @type name :: binary
-  @type url :: binary
-  @type insights_response ::
-          {:ok, ContifyAPI.Model.Error.t()}
-          | {:ok, ContifyAPI.Model.InsightsResponse.t()}
-          | {:ok, String.t()}
-          | {:error, Tesla.Env.t()}
-  @type request_company_response ::
-          {:ok, ContifyAPI.Model.Error.t()}
-          | {:ok, ContifyAPI.Model.RequestCompanyGet200Response.t()}
-          | {:ok, String.t()}
-          | {:error, Tesla.Env.t()}
-  @type search_company_response ::
-          {:ok, ContifyAPI.Model.Error.t()}
-          | {:ok, ContifyAPI.Model.RequestCompanyGet200Response.t()}
-          | {:ok, String.t()}
-          | {:error, Tesla.Env.t()}
-  @type webhook :: map
-  @type webhook_response ::
-          {:ok, ContifyAPI.Model.WebhooksResponse.t()}
-          | {:ok, String.t()}
-          | {:error, ContifyAPI.Model.Error.t()}
-          | {:error, Tesla.Env.t()}
+  @typedoc "Result of a Contify API call."
+  @type result(success_t) ::
+          {:ok, success_t | Model.Error.t()} | {:error, Exception.t() | Req.Response.t()}
 
   @doc """
-  Get insights for a given company.
-
-  ## Examples
-
-      iex> Contify.insights()
-      {:ok, %ContifyAPI.Model.InsightsRequest{}}
-
+  Get insights for the given filters. See `ContifyAPI.Api.Insights.insights/1`
+  for the full option list.
   """
-  @type params :: keyword
-  @spec insights(params) :: insights_response
+  @spec insights(keyword()) :: result(Model.InsightsResponse.t())
   defdelegate insights(params), to: Insights
 
   @doc """
-  Creates a webhook.
-
-  ## Examples
-
-      iex> Contify.subscribe_to_webhook(%{name: "some name",url: "some endpoint",headerName: "",headerValue: "",companyId: 678,industryId: "",contentTypeId: "",locationId: "",sourceId: "",channelId: "",topicId: "",customTopicId: "",languageId: "",keyword: "",advancedQuery: ""})
-      {:ok, %ContifyAPI.Model.WebhookGetRequest{}}
-
+  Search for a company by name and/or url. See `ContifyAPI.Api.Company.search_company/1`.
   """
-
-  @spec subscribe_to_webhook(webhook) :: webhook_response
-  defdelegate subscribe_to_webhook(webhook), to: Webhooks
-  defdelegate list_webhooks(), to: Webhooks
-  defdelegate get_webhook(id), to: Webhooks
-  defdelegate update_webhook(id, webhook), to: Webhooks
-  defdelegate delete_webhook(webhook), to: Webhooks
-
-  @doc """
-  Search for a Company.
-
-  ## Examples
-
-      iex> Contify.search_company([name: "some name", url: "some url", page: 1])
-      {:ok, %ContifyAPI.Model.RequestCompanyGet200Response{count: 30,   next: "?page=2",previous: nil,results: [
-        %ContifyAPI.Model.Company{}]}
-
-  """
-
+  @spec search_company(keyword()) :: result(Model.SearchCompanyGet200Response.t())
   defdelegate search_company(query), to: Company
 
   @doc """
-  Request for a Company.
-
-  ## Examples
-
-      iex> Contify.request_company("some name", "some url")
-      {:ok, %ContifyAPI.Model.RequestCompanyGet200Response{}
-
+  Request a new company by name and url. See `ContifyAPI.Api.Company.request_company/2`.
   """
-  @spec request_company(name, url) :: request_company_response()
+  @spec request_company(String.t(), String.t()) :: result(Model.RequestCompanyGet200Response.t())
   defdelegate request_company(name, url), to: Company
+
+  @doc "Subscribe to a webhook. See `ContifyAPI.Api.Webhooks.subscribe_to_webhook/1`."
+  @spec subscribe_to_webhook(map()) :: result(Model.WebhooksResponse.t())
+  defdelegate subscribe_to_webhook(webhook), to: Webhooks
+
+  @doc "List all webhooks. See `ContifyAPI.Api.Webhooks.list_webhooks/0`."
+  @spec list_webhooks() :: result(Model.WebhookGet200Response.t())
+  defdelegate list_webhooks(), to: Webhooks
+
+  @doc "Get a webhook by id. See `ContifyAPI.Api.Webhooks.get_webhook/1`."
+  @spec get_webhook(integer() | String.t()) :: result(Model.WebhooksResponse.t())
+  defdelegate get_webhook(id), to: Webhooks
+
+  @doc "Update a webhook. See `ContifyAPI.Api.Webhooks.update_webhook/2`."
+  @spec update_webhook(integer() | String.t(), map()) :: result(Model.WebhooksResponse.t())
+  defdelegate update_webhook(id, webhook), to: Webhooks
+
+  @doc "Delete a webhook. See `ContifyAPI.Api.Webhooks.delete_webhook/1`."
+  @spec delete_webhook(integer() | String.t()) :: result(nil)
+  defdelegate delete_webhook(id), to: Webhooks
 end
