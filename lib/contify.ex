@@ -58,7 +58,7 @@ defmodule Contify do
   defdelegate subscribe_to_webhook(webhook), to: Webhooks
 
   @doc "List all webhooks. See `ContifyAPI.Api.Webhooks.list_webhooks/0`."
-  @spec list_webhooks() :: result([Model.WebhooksResponse.t()])
+  @spec list_webhooks() :: result(Model.WebhookGet200Response.t())
   defdelegate list_webhooks(), to: Webhooks
 
   @doc "Get a webhook by id. See `ContifyAPI.Api.Webhooks.get_webhook/1`."

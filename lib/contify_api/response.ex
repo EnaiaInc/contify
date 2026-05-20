@@ -113,6 +113,10 @@ defmodule ContifyAPI.Response do
     Map.update(attrs, :results, attrs[:results], &hydrate_list(&1, Model.Insight))
   end
 
+  defp hydrate_nested(attrs, Model.WebhookGet200Response) do
+    Map.update(attrs, :results, attrs[:results], &hydrate_list(&1, Model.WebhooksResponse))
+  end
+
   defp hydrate_nested(attrs, Model.Insight) do
     attrs
     |> hydrate_field(:language, Model.Language)

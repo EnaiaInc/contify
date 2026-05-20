@@ -4,6 +4,7 @@ defmodule ContifyAPI.Api.Webhooks do
   """
 
   alias ContifyAPI.Client
+  alias ContifyAPI.Model.WebhookGet200Response
   alias ContifyAPI.Model.WebhooksResponse
 
   @doc """
@@ -20,14 +21,17 @@ defmodule ContifyAPI.Api.Webhooks do
 
   @doc """
   List all active webhooks created by the authenticated user.
+
+  The Contify API wraps results in `{count, next, previous, results}`; the
+  returned struct preserves that envelope.
   """
   @spec list_webhooks() ::
-          {:ok, [WebhooksResponse.t()] | ContifyAPI.Model.Error.t()}
+          {:ok, WebhookGet200Response.t() | ContifyAPI.Model.Error.t()}
           | {:error, Exception.t() | Req.Response.t()}
   def list_webhooks do
     Client.new()
     |> Req.get(url: "/webhook/")
-    |> ContifyAPI.Response.decode_list(WebhooksResponse)
+    |> ContifyAPI.Response.decode(WebhookGet200Response)
   end
 
   @doc """
