@@ -25,3 +25,6 @@ contify-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 .elixir_ls
+
+# Dialyzer PLTs
+/priv/plts/
